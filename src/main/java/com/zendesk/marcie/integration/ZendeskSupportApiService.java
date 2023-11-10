@@ -2,9 +2,12 @@ package com.zendesk.marcie.integration;
 
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,12 +21,30 @@ import reactor.core.publisher.Mono;
 @Component
 public class ZendeskSupportApiService {
 
-        @Autowired
-        private WebClient webClient;
+
+        @Value("${zendesk.account.url}")
+        private String url;
+
+
+        @Value("${zendesk.account.username}")
+        private String username;
+
+        @Value("${zendesk.account.password}")
+        private String password;
 
         @Autowired
         @Lazy
         private TicketService ticketService;
+
+        private final WebClient webClient;
+
+        public ZendeskSupportApiService(WebClient.Builder builder) {
+                this.webClient = builder.baseUrl(url)
+                .defaultHeaders(httpHeaders -> {
+                    httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+                    httpHeaders.setBasicAuth(username, password);
+                }).build();
+        }
 
         public Flux<DataContent> getAllTicket() {
                 Flux<DataContent> listOfTickets = (webClient.get()
