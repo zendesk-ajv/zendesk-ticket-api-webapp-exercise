@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.zendesk.marcie.dto.DataContent;
+import com.zendesk.marcie.dto.Ticket;
 
 @Tag(name = "Zendesk Ticket Viewer", description = "the Ticket Api")
 public interface TicketApi {
@@ -30,7 +31,7 @@ public interface TicketApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "successfully get a ticket")
     })
-    public Mono<DataContent> getTicket(@PathVariable(value = "ticketId") Integer ticketId) throws ValidationException;
+    public Mono<Ticket> getTicket(@PathVariable(value = "ticketId") Integer ticketId) throws ValidationException;
 
     @Operation(
             summary = "Update ticket",
@@ -38,7 +39,7 @@ public interface TicketApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "successfully get a ticket")
     })
-    public Mono<DataContent> updateTicket(@PathVariable(value = "ticketId") Integer ticketId, @RequestBody DataContent dataContent) throws ValidationException;
+    public Mono<Ticket> updateTicket(@PathVariable(value = "ticketId") Integer ticketId, @RequestBody DataContent dataContent) throws ValidationException;
 
 
     // /api/v2/tickets/{ticket_id}

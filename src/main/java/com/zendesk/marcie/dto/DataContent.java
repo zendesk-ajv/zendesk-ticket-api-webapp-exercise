@@ -3,18 +3,21 @@ package com.zendesk.marcie.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
+@ToString
 public class DataContent {
- private Ticket TicketObject;
+ private Ticket ticket;
 
  public List<Ticket> tickets;
+}
 
  // Getter Methods 
-
+/*
  public List<Ticket> getTickets() {
     return tickets;
 }
@@ -23,7 +26,7 @@ public void setTickets(List<Ticket> tickets) {
     this.tickets = tickets;
 }
 
-public Ticket getTicket() {
+public Mono<Ticket> getTicket() {
   return TicketObject;
  }
 
@@ -33,7 +36,7 @@ public Ticket getTicket() {
   this.TicketObject = ticketObject;
  }
 }
-
+*/
 /* 
 @JsonInclude(JsonInclude.Include.NON_NULL)
  class Ticket1 {

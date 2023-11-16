@@ -54,7 +54,7 @@ public class TicketApiImplTest {
     @Test
     void getTicket() throws ValidationException {
         int ticketId = 123;
-        DataContent dataContent = new DataContent(); //set the required fields
+        Ticket dataContent = new Ticket(); //set the required fields
         Mockito.when(ticketService.getTicket(ticketId)).thenReturn(Mono.just(dataContent));
 
         StepVerifier.create(ticketApiImpl.getTicket(ticketId))
@@ -65,10 +65,11 @@ public class TicketApiImplTest {
     @Test
     void updateTicket() throws ValidationException {
         int ticketId = 123;
-        DataContent dataContent = new DataContent(); //set the required fields
-        Mockito.when(ticketService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(dataContent));
+        Ticket dataContent = new Ticket(); //set the required fields
+        DataContent dContent = new DataContent();
+        Mockito.when(ticketService.updateTicket(ticketId, dContent)).thenReturn(Mono.just(dataContent));
         
-        StepVerifier.create(ticketApiImpl.updateTicket(ticketId, dataContent))
+        StepVerifier.create(ticketApiImpl.updateTicket(ticketId, dContent))
             .expectNext(dataContent)
             .verifyComplete();
     }

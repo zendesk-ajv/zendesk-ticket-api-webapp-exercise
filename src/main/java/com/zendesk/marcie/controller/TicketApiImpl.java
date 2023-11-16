@@ -45,14 +45,14 @@ public class TicketApiImpl implements TicketApi {
     }
 
     @GetMapping("/get-ticket/{ticketId}")
-    public Mono<DataContent> getTicket(@PathVariable(value = "ticketId") Integer ticketId) throws ValidationException {
+    public Mono<Ticket> getTicket(@PathVariable(value = "ticketId") Integer ticketId) throws ValidationException {
         return ticketService.getTicket(ticketId);
 
     }
 
     // PUT request
     @PutMapping("/update-ticket/{ticketId}")
-    public Mono<DataContent> updateTicket(@PathVariable(value = "ticketId") Integer ticketId,
+    public Mono<Ticket> updateTicket(@PathVariable(value = "ticketId") Integer ticketId,
             @RequestBody DataContent dataContent) throws ValidationException {
 
         return ticketService.updateTicket(ticketId, dataContent);

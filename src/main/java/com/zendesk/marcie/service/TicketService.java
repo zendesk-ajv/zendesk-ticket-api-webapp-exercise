@@ -32,12 +32,12 @@ public class TicketService {
         return zendeskSupportApiService.getAllTicket();
     }
 
-    public Mono<DataContent> getTicket(Integer ticketId) throws ValidationException {
+    public Mono<Ticket> getTicket(Integer ticketId) throws ValidationException {
         ticketValidator.validateUserInput(ticketId);
         return zendeskSupportApiService.getTicket(ticketId);
     }
 
-    public Mono<DataContent> updateTicket(Integer ticketId, DataContent dataContent) throws ValidationException {
+    public Mono<Ticket> updateTicket(Integer ticketId, DataContent dataContent) throws ValidationException {
         ticketValidator.validateUserInput(ticketId);
         ticketValidator.validateDataContent(dataContent);
         return zendeskSupportApiService.updateTicket(ticketId, dataContent);

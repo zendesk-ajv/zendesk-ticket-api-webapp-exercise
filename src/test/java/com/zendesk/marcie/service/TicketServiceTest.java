@@ -47,7 +47,7 @@ public class TicketServiceTest {
     @Test
     void getTicket() throws ValidationException {
         int ticketId = 123;
-        DataContent dataContent = new DataContent(); // set the required fields
+        Ticket dataContent = new Ticket(); // set the required fields
         Mockito.when(zendeskSupportApiService.getTicket(ticketId)).thenReturn(Mono.just(dataContent));
         
         ticketService.getTicket(ticketId);
@@ -59,7 +59,8 @@ public class TicketServiceTest {
     void updateTicket() throws ValidationException {
         int ticketId = 123;
         DataContent dataContent = new DataContent(); // set the required fields
-        Mockito.when(zendeskSupportApiService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(dataContent));
+        Ticket ticket = new Ticket();
+        Mockito.when(zendeskSupportApiService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(ticket));
         
         ticketService.updateTicket(ticketId, dataContent);
         
