@@ -25,10 +25,9 @@ public class ZendeskSupportApiService {
 
         private final WebClient webClient;
 
-     
-    public ZendeskSupportApiService(WebClient webClient) {
-        this.webClient = webClient;
-    }
+        public ZendeskSupportApiService(WebClient webClient) {
+                this.webClient = webClient;
+        }
 
         public Flux<DataContent> getAllTicket() {
                 Flux<DataContent> listOfTickets = (webClient.get()
@@ -59,8 +58,7 @@ public class ZendeskSupportApiService {
                                                                 "Zendesk api not availables")))
                                 .bodyToMono(DataContent.class));
 
-                
-                //System.out.println( ticketData.block().getTicket());
+                // System.out.println( ticketData.block().getTicket());
 
                 return ticketData.map(DataContent::getTicket);
 

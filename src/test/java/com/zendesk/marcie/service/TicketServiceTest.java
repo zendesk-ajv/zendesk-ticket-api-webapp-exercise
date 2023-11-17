@@ -102,9 +102,9 @@ public class TicketServiceTest {
         Mockito.when(zendeskSupportApiService.getAllTicket()).thenReturn(Flux.just(dataContent));
 
         // Test
-        Page<Ticket> ticketPage = ticketService.findPaginatedTicket(pageNumber, pageSize);
+        List<Ticket> ticketPage = ticketService.findPaginatedTicket(pageNumber, pageSize);
 
         // Validate
-        assertEquals(pageSize, ticketPage.getNumberOfElements());
+        assertEquals(pageSize, ticketPage.size());
     }
 }

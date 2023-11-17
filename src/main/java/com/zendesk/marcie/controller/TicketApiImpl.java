@@ -1,7 +1,9 @@
 package com.zendesk.marcie.controller;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,12 +38,12 @@ public class TicketApiImpl implements TicketApi {
     }
 
     @GetMapping("/get-all-tickets-page")
-    public Page<Ticket> getAllTicket(@RequestParam(value = "pageNumber") Integer pageNumber,
+    public List<Ticket> getAllTicket(@RequestParam(value = "pageNumber") Integer pageNumber,
             @RequestParam(value = "pageSize") Integer pageSize) {
         if (pageNumber != null || pageSize != null) {
             return ticketService.findPaginatedTicket(pageNumber, pageSize);
         } 
-        return Page.empty();
+        return Collections.emptyList();
     }
 
     @GetMapping("/get-ticket/{ticketId}")

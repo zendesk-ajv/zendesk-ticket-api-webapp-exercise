@@ -2,6 +2,7 @@ package com.zendesk.marcie.configuration;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -24,10 +25,16 @@ import jakarta.servlet.http.HttpServletResponse;
 public class WebSecurityConfig {
 
     private static final String[] SWAGGER_WHITELIST = {
-        "/v3/api-docs/**",
-        "/swagger-ui/**",
-        "/swagger-ui.html",
-};
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+    };
+
+    @Value("${api.basic.auth.username}")
+    private String userName;
+
+    @Value("${api.basic.auth.password}")
+    private String password;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -37,7 +44,7 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authorize) -> { 
+        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authorize) -> {
             authorize.requestMatchers(SWAGGER_WHITELIST).permitAll();
             authorize.anyRequest().authenticated();
         }).httpBasic(Customizer.withDefaults()).exceptionHandling(
@@ -61,7 +68,7 @@ public class WebSecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
 
-        UserDetails admin = User.builder().username("admin").password(passwordEncoder().encode("admin"))
+        UserDetails admin = User.builder().username(userName).password(passwordEncoder().encode(password))
                 .build();
 
         return new InMemoryUserDetailsManager(admin);

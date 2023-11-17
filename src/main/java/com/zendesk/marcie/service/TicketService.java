@@ -47,7 +47,7 @@ public class TicketService {
         return zendeskSupportApiService.deleteTicket(ticketId);
     }
 
-    public Page<Ticket> findPaginatedTicket(int pageNumber, int pageSize) {
+    public List<Ticket> findPaginatedTicket(int pageNumber, int pageSize) {
         
         ticketValidator.validatePageNumberAndSize(pageNumber, pageSize);
 
@@ -63,6 +63,6 @@ public class TicketService {
         // Get sublist and create PageImpl
         List<Ticket> pageList = listOfTickets.subList(startItem, endItem);
         Page<Ticket> dataContentPage = new PageImpl<>(pageList, pageable, listOfTickets.size());
-        return dataContentPage;
+        return dataContentPage.getContent();
     }
 }

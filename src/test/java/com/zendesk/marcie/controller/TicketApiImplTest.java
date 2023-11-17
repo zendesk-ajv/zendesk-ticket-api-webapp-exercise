@@ -2,7 +2,9 @@ package com.zendesk.marcie.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +46,7 @@ public class TicketApiImplTest {
     void getAllTicket_pagination() {
         int pageNumber = 1;
         int pageSize = 5;
-        Page<Ticket> ticketPage = new PageImpl<>(Collections.emptyList()); // create a page object
+        List<Ticket> ticketPage = new ArrayList<>(0); // create a ticket list object
         
         Mockito.when(ticketService.findPaginatedTicket(pageNumber, pageSize)).thenReturn(ticketPage);
         
