@@ -21,4 +21,14 @@ public class TicketValidator {
         }
     }
 
+    public void validatePageNumberAndSize(int pageNumber, int pageSize) {
+        if (pageNumber < 0) {
+            throw new IllegalArgumentException("Page number can't be negative!");
+        }
+        if (pageSize <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than 0!");
+        }
+        
+    }
+
 }
