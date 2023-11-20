@@ -21,4 +21,7 @@ public class TicketValidator {
         }
     }
 
+    public void validatePageNumberAndSize(int pageNumber, int pageSize) {
+    }
+
 }

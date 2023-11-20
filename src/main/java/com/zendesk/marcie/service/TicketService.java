@@ -1,6 +1,5 @@
 package com.zendesk.marcie.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +31,12 @@ public class TicketService {
         return zendeskSupportApiService.getAllTicket();
     }
 
-    public Mono<DataContent> getTicket(Integer ticketId) throws ValidationException {
+    public Mono<Ticket> getTicket(Integer ticketId) throws ValidationException {
         ticketValidator.validateUserInput(ticketId);
         return zendeskSupportApiService.getTicket(ticketId);
     }
 
-    public Mono<DataContent> updateTicket(Integer ticketId, DataContent dataContent) throws ValidationException {
+    public Mono<Ticket> updateTicket(Integer ticketId, DataContent dataContent) throws ValidationException {
         ticketValidator.validateUserInput(ticketId);
         ticketValidator.validateDataContent(dataContent);
         return zendeskSupportApiService.updateTicket(ticketId, dataContent);
@@ -48,21 +47,13 @@ public class TicketService {
         return zendeskSupportApiService.deleteTicket(ticketId);
     }
 
-    public Page<Ticket> findPaginatedTicket(int pageNumber, int pageSize) {
-        // List<DataContent> dataList = getAllTicket().collectList().block();
-
-        //validation pageNumber zero-based page number, must not be negative.
-
-        //pageSize the size of the page to be returned, must be greater than 0.
+    public List<Ticket> findPaginatedTicket(int pageNumber, int pageSize) {
         
-        List<Ticket> listOfTickets = new ArrayList<>(getAllTicket().collectList().block().get(0).getTickets());
+        ticketValidator.validatePageNumberAndSize(pageNumber, pageSize);
+
+        List<Ticket> listOfTickets = getAllTicket().map(DataContent::getTickets).blockFirst();
+        
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        // getAllTicket().collectList().subscribe(dataList::addAll);
-        // getAllTicket().doOnNext(dataList::add).subscribe();
-
-        // getAllTicket().subscribe(dataList::add);
-        // List<Ticket> listOfTickets= dataList.get(0).getTickets();
 
         // Calculate start and end item indexes
         System.out.println("size of ticket list " + listOfTickets.size());
@@ -72,6 +63,6 @@ public class TicketService {
         // Get sublist and create PageImpl
         List<Ticket> pageList = listOfTickets.subList(startItem, endItem);
         Page<Ticket> dataContentPage = new PageImpl<>(pageList, pageable, listOfTickets.size());
-        return dataContentPage;
+        return dataContentPage.getContent();
     }
 }

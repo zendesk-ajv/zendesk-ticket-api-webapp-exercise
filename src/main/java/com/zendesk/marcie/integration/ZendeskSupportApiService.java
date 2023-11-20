@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.zendesk.marcie.dto.DataContent;
+import com.zendesk.marcie.dto.Ticket;
 import com.zendesk.marcie.exception.ApiUnavailableException;
 import com.zendesk.marcie.service.TicketService;
 import reactor.core.publisher.Flux;
@@ -22,28 +23,14 @@ import reactor.core.publisher.Mono;
 public class ZendeskSupportApiService {
 
 
-        @Value("${zendesk.account.url}")
-        private String url;
-
-
-        @Value("${zendesk.account.username}")
-        private String username;
-
-        @Value("${zendesk.account.password}")
-        private String password;
-
         @Autowired
         @Lazy
         private TicketService ticketService;
 
         private final WebClient webClient;
 
-        public ZendeskSupportApiService(WebClient.Builder builder) {
-                this.webClient = builder.baseUrl(url)
-                .defaultHeaders(httpHeaders -> {
-                    httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                    httpHeaders.setBasicAuth(username, password);
-                }).build();
+        public ZendeskSupportApiService(WebClient webClient) {
+                this.webClient = webClient;
         }
 
         public Flux<DataContent> getAllTicket() {
@@ -63,17 +50,9 @@ public class ZendeskSupportApiService {
                 return listOfTickets;
         }
 
-        /*private void extracted() {
-                getAllTicket().subscribe(ticket -> {
-                        ticket.getTickets().stream().forEach(singleTicket -> {
-                                Ticket oneTicket = new Ticket();
-                                BeanUtils.copyProperties(singleTicket, oneTicket);
-                                ticketService.save(oneTicket);
-                        });
-                });
-        }*/
+       
 
-        public Mono<DataContent> getTicket(Integer ticketId) {
+        public Mono<Ticket> getTicket(Integer ticketId) {
                 Mono<DataContent> ticketData = (webClient.get()
                                 .uri(uriBuilder -> uriBuilder.path("/api/v2/tickets/" + ticketId)
                                                 .build())
@@ -86,11 +65,11 @@ public class ZendeskSupportApiService {
                                                                 "Zendesk api not availables")))
                                 .bodyToMono(DataContent.class));
 
-                return ticketData;
+                return ticketData.map(DataContent::getTicket);
 
         }
 
-        public Mono<DataContent> updateTicket(Integer ticketId, DataContent dataContent) {
+        public Mono<Ticket> updateTicket(Integer ticketId, DataContent dataContent) {
 
                 Mono<DataContent> updatedTicket = webClient.put()
                                 .uri(uriBuilder -> uriBuilder.path("/api/v2/tickets/" + ticketId)
@@ -104,7 +83,7 @@ public class ZendeskSupportApiService {
                                                 response -> Mono.error(new ApiUnavailableException(
                                                                 "Zendesk api not availables")))
                                 .bodyToMono(DataContent.class);
-                return updatedTicket;
+                return updatedTicket.map(DataContent::getTicket);
         }
 
         public Mono<Object> deleteTicket(Integer ticketId) {

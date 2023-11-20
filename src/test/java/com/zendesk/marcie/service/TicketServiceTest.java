@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import com.zendesk.marcie.dto.DataContent;
 import com.zendesk.marcie.dto.Ticket;
 import com.zendesk.marcie.integration.ZendeskSupportApiService;
@@ -47,7 +46,7 @@ public class TicketServiceTest {
     @Test
     void getTicket() throws ValidationException {
         int ticketId = 123;
-        DataContent dataContent = new DataContent(); // set the required fields
+        Ticket dataContent = new Ticket(); // set the required fields
         Mockito.when(zendeskSupportApiService.getTicket(ticketId)).thenReturn(Mono.just(dataContent));
         
         ticketService.getTicket(ticketId);
@@ -59,7 +58,8 @@ public class TicketServiceTest {
     void updateTicket() throws ValidationException {
         int ticketId = 123;
         DataContent dataContent = new DataContent(); // set the required fields
-        Mockito.when(zendeskSupportApiService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(dataContent));
+        Ticket ticket = new Ticket();
+        Mockito.when(zendeskSupportApiService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(ticket));
         
         ticketService.updateTicket(ticketId, dataContent);
         
@@ -101,9 +101,9 @@ public class TicketServiceTest {
         Mockito.when(zendeskSupportApiService.getAllTicket()).thenReturn(Flux.just(dataContent));
 
         // Test
-        Page<Ticket> ticketPage = ticketService.findPaginatedTicket(pageNumber, pageSize);
+        List<Ticket> ticketPage = ticketService.findPaginatedTicket(pageNumber, pageSize);
 
         // Validate
-        assertEquals(pageSize, ticketPage.getNumberOfElements());
+        assertEquals(pageSize, ticketPage.size());
     }
 }

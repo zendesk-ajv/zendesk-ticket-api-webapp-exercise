@@ -3,6 +3,7 @@ package com.zendesk.marcie.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import com.zendesk.marcie.dto.DataContent;
 import com.zendesk.marcie.dto.Ticket;
 import com.zendesk.marcie.service.TicketService;
@@ -44,7 +43,7 @@ public class TicketApiImplTest {
     void getAllTicket_pagination() {
         int pageNumber = 1;
         int pageSize = 5;
-        Page<Ticket> ticketPage = new PageImpl<>(Collections.emptyList()); // create a page object
+        List<Ticket> ticketPage = Collections.emptyList(); // create a page object
         
         Mockito.when(ticketService.findPaginatedTicket(pageNumber, pageSize)).thenReturn(ticketPage);
         
@@ -55,21 +54,23 @@ public class TicketApiImplTest {
     void getTicket() throws ValidationException {
         int ticketId = 123;
         DataContent dataContent = new DataContent(); //set the required fields
-        Mockito.when(ticketService.getTicket(ticketId)).thenReturn(Mono.just(dataContent));
+        Ticket ticket = new Ticket();
+        Mockito.when(ticketService.getTicket(ticketId)).thenReturn(Mono.just(ticket));
 
         StepVerifier.create(ticketApiImpl.getTicket(ticketId))
-            .expectNext(dataContent)
+            .expectNext(ticket)
             .verifyComplete();
     }
 
     @Test
     void updateTicket() throws ValidationException {
         int ticketId = 123;
-        DataContent dataContent = new DataContent(); //set the required fields
-        Mockito.when(ticketService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(dataContent));
+        Ticket ticket = new Ticket(); //set the required fields
+        DataContent dataContent = new DataContent();
+        Mockito.when(ticketService.updateTicket(ticketId, dataContent)).thenReturn(Mono.just(ticket));
         
         StepVerifier.create(ticketApiImpl.updateTicket(ticketId, dataContent))
-            .expectNext(dataContent)
+            .expectNext(ticket)
             .verifyComplete();
     }
 
